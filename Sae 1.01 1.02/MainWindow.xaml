@@ -6,7 +6,5 @@
         xmlns:local="clr-namespace:Sae_1._01_1._02"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
-    </Grid>
+    <Grid/>
 </Window>

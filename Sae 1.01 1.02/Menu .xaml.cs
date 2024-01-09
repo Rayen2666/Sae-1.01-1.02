@@ -10,26 +10,23 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Sae_1._01_1._02
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Logique d'interaction pour Menu.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class Menu : Window
     {
-        public MainWindow()
+        public Menu()
         {
-            InitializeComponent();      
-            Menu fenetreDebut = new Menu();
-            fenetreDebut.ShowDialog();
+            InitializeComponent();
+        }
 
-            
+        private void Jouer_Button_Click(object sender, RoutedEventArgs e)
+        {          
+            this.Close();
         }
     }
-   
-
-
 }
