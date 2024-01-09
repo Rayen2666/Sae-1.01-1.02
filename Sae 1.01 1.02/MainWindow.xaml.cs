@@ -28,6 +28,11 @@ namespace Sae_1._01_1._02
         int vitesseEnnemi = 10;
 
         private ImageBrush playerSkin = new ImageBrush();
+        private bool goUp, goDown = false;
+        int speed = 5;
+        
+        ImageBrush ArrierePlanSprite = new ImageBrush();
+        DispatcherTimer jeuTimer = new DispatcherTimer();
 
         public MainWindow()
         {
@@ -36,9 +41,42 @@ namespace Sae_1._01_1._02
             playerSkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "formule1.png"));
             // assignement de skin du joueur au rectangle associé
             player1.Fill = playerSkin;
+            Menu fenetreDebut = new Menu();
+            fenetreDebut.ShowDialog();
+
+            ArrierePlanSprite.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "image\\Fond.png"));
+            ArrierePlan.Fill = ArrierePlanSprite;
+            ArrierePlan2.Fill = ArrierePlanSprite;
+
+            jeuTimer.Interval = TimeSpan.FromMilliseconds(20);
+            jeuTimer.Tick += BoucleJeu; 
+
+
+
+            DebutJeu();
         }
 
-        private void Canvas_KeyDown(object sender, KeyEventArgs e)
+        private void BoucleJeu(object? sender, EventArgs e)
+        {
+            if (goUp && Canvas.GetTop(joueur) > 0)
+            {
+                Canvas.SetTop(joueur, Canvas.GetTop(joueur) - speed);
+            }
+        }
+
+
+
+        private void DebutJeu()
+        {
+            jeuTimer.Start();
+            goUp = false;
+            goDown = false;
+                      
+
+
+        }
+
+        private void Window_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Up)
             {
@@ -68,6 +106,8 @@ namespace Sae_1._01_1._02
             Rect joueur = new Rect(Canvas.GetLeft(joueur1), Canvas.GetTop(joueur1), joueur1.Width, joueur1.Height);*/
 
             Bouger_Joueur();
+                goDown = true;
+            }
         }
 
         private void Bouger_Joueur()
@@ -80,6 +120,21 @@ namespace Sae_1._01_1._02
             {
                 Canvas.SetTop(player1, Canvas.GetTop(player1) + vitesseJoueur);
             }
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Up)
+            {
+                goUp = true;
+            }
+            if (e.Key == Key.Down)
+            {
+                goDown = true;
+            }
         }
+
+  
     }
+   
+
+
 }

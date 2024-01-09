@@ -1,0 +1,35 @@
+﻿<Window x:Class="Sae_1._01_1._02.Menu"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Sae_1._01_1._02"
+        mc:Ignorable="d"
+        Title="Menu" Height="500" Width="900">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="69*"/>
+            <ColumnDefinition Width="11*"/>
+
+        </Grid.ColumnDefinitions>
+        <Label Content="F1finite" HorizontalAlignment="Left" Margin="90,55,0,0" VerticalAlignment="Top" Width="246" FontSize="72" FontFamily="Tw Cen MT" HorizontalContentAlignment="Center" Foreground="#FF0E18C1"/>
+        <Button Content="JOUER" HorizontalAlignment="Left" Height="56" Margin="540,275,0,0" VerticalAlignment="Top" Width="160" Click="Jouer_Button_Click" FontFamily="Segoe UI Black" FontSize="22" Background="Red"/>
+        <Image Margin="68,148,418,73" Source="/Image2.png" Stretch="Fill"/>
+        <ComboBox 
+            Name="choix_difficulte"  VerticalAlignment="Top"                      
+            HorizontalAlignment="Left" Margin="560,163,0,0"  Width="120">
+            <ComboBoxItem IsSelected="True" Name="Facile">Facile</ComboBoxItem>
+            <ComboBoxItem IsSelected="False" Name="Moyen">Moyen</ComboBoxItem>
+            <ComboBoxItem IsSelected="False" Name="Difficile">Difficile</ComboBoxItem>
+
+
+
+        </ComboBox>
+        <Label Content="Veuillez choisir un niveau de difficulté :" HorizontalAlignment="Left" Margin="510,117,0,0" VerticalAlignment="Top" Width="220"/>
+
+
+
+
+
+    </Grid>
+</Window>
