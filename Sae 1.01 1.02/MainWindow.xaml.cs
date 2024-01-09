@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace Sae_1._01_1._02
 {
@@ -22,9 +23,10 @@ namespace Sae_1._01_1._02
     {
         // booléens pour monter et descendre
         private bool goUp, goDown = false;
-
-        int score = 0;
+        int speed = 5;
+        
         ImageBrush ArrierePlanSprite = new ImageBrush();
+        DispatcherTimer jeuTimer = new DispatcherTimer();
 
         public MainWindow()
         {
@@ -32,28 +34,60 @@ namespace Sae_1._01_1._02
             Menu fenetreDebut = new Menu();
             fenetreDebut.ShowDialog();
 
-
-
             ArrierePlanSprite.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "image\\Fond.png"));
             ArrierePlan.Fill = ArrierePlanSprite;
             ArrierePlan2.Fill = ArrierePlanSprite;
+
+            jeuTimer.Interval = TimeSpan.FromMilliseconds(20);
+            jeuTimer.Tick += BoucleJeu; 
+
+
+
+            DebutJeu();
         }
 
-        private void Canvas_KeyDown(object sender, KeyEventArgs e)
+        private void BoucleJeu(object? sender, EventArgs e)
+        {
+            if (goUp && Canvas.GetTop(joueur) > 0)
+            {
+                Canvas.SetTop(joueur, Canvas.GetTop(joueur) - speed);
+            }
+        }
+
+
+
+        private void DebutJeu()
+        {
+            jeuTimer.Start();
+            goUp = false;
+            goDown = false;
+                      
+
+
+        }
+
+        private void Window_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Up)
             {
-
+                goUp = true;
             }
             if (e.Key == Key.Down)
             {
-
+                goDown = true;
             }
         }
 
-        private void Canvas_KeyUp(object sender, KeyEventArgs e)
+        private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key != Key.Up) { }
+            if (e.Key == Key.Up)
+            {
+                goUp = true;
+            }
+            if (e.Key == Key.Down)
+            {
+                goDown = true;
+            }
         }
 
   
