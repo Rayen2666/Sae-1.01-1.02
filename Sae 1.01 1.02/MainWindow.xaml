@@ -5,18 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Sae_1._01_1._02"
         mc:Ignorable="d"
-        Title="MainWindow" Height="515" Width="1000">
-    <Grid>
-        <Canvas>
-            <Rectangle HorizontalAlignment="Left" Height="500"  VerticalAlignment="Top" Width="1435" Fill="orange"/>
-            <Rectangle HorizontalAlignment="Left" Height="500"  VerticalAlignment="Top" Width="1435" Fill="LightGreen" Canvas.Left="1435"/>
-            <Rectangle Height="50" Stroke="Black" Width="100" Fill="#FF009CFF" Margin="100,220,0,0"/>
-            <Rectangle Height="50" Stroke="Black" Width="100" Fill="Red" Margin="800,125,0,0"/>
-            <Rectangle Height="50" Stroke="Black" Width="100" Fill="Red" Margin="800,190,0,0"/>
-            <Rectangle Height="50" Stroke="Black" Width="100" Fill="Red" Margin="800,260,0,0"/>
-            <Rectangle Height="50" Stroke="Black" Width="100" Fill="Red" Margin="800,325,0,0"/>
-        </Canvas>
+        Title="MainWindow" 
+        Height="515" 
+        Width="1000"
+        KeyDown="Canvas_KeyDown" 
+        KeyUp="Canvas_KeyUp">
 
-
-    </Grid>
+    <Canvas>
+        <Rectangle x:Name="fond1" HorizontalAlignment="Left" Height="500"  VerticalAlignment="Top" Width="1435" Fill="orange"/>
+        <Rectangle x:Name="fond2" HorizontalAlignment="Left" Height="500"  VerticalAlignment="Top" Width="1435" Fill="LightGreen" Canvas.Left="1435"/>
+        <Rectangle x:Name="player1" Height="50" Stroke="Black" Width="100" Fill="#FF009CFF" Margin="100,0,0,0" Canvas.Top="220"/>
+        <Rectangle x:Name="enemie1" Height="50" Stroke="Black" Width="100" Fill="Red" Margin="800,125,0,0"/>
+        <Rectangle x:Name="enemie2" Height="50" Stroke="Black" Width="100" Fill="Red" Margin="800,190,0,0"/>
+        <Rectangle x:Name="enemie3" Height="50" Stroke="Black" Width="100" Fill="Red" Margin="800,260,0,0"/>
+        <Rectangle x:Name="enemie4" Height="50" Stroke="Black" Width="100" Fill="Red" Margin="800,325,0,0"/>
+    </Canvas>
 </Window>
