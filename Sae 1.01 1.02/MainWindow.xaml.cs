@@ -23,25 +23,27 @@ namespace Sae_1._01_1._02
         // booléens pour monter et descendre
         private bool goUp, goDown = false;
 
-
+        int score = 0;
+        ImageBrush ArrierePlanSprite = new ImageBrush();
 
         public MainWindow()
         {
-            InitializeComponent();      
+            InitializeComponent();
             Menu fenetreDebut = new Menu();
             fenetreDebut.ShowDialog();
 
-            
-            InitializeComponent();
 
 
+            ArrierePlanSprite.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "image\\Fond.png"));
+            ArrierePlan.Fill = ArrierePlanSprite;
+            ArrierePlan2.Fill = ArrierePlanSprite;
         }
 
         private void Canvas_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Up)
             {
-                g
+
             }
             if (e.Key == Key.Down)
             {
@@ -51,8 +53,10 @@ namespace Sae_1._01_1._02
 
         private void Canvas_KeyUp(object sender, KeyEventArgs e)
         {
-            if(e.Key != Key.Up) { }
+            if (e.Key != Key.Up) { }
         }
+
+  
     }
    
 
