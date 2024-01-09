@@ -20,6 +20,11 @@ namespace Sae_1._01_1._02
     /// </summary>
     public partial class MainWindow : Window
     {
+        // booléens pour monter et descendre
+        private bool goUp, goDown = false;
+
+
+
         public MainWindow()
         {
             InitializeComponent();      
@@ -27,6 +32,26 @@ namespace Sae_1._01_1._02
             fenetreDebut.ShowDialog();
 
             
+            InitializeComponent();
+
+
+        }
+
+        private void Canvas_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Up)
+            {
+                g
+            }
+            if (e.Key == Key.Down)
+            {
+
+            }
+        }
+
+        private void Canvas_KeyUp(object sender, KeyEventArgs e)
+        {
+            if(e.Key != Key.Up) { }
         }
     }
    
