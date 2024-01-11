@@ -25,8 +25,21 @@ namespace Sae_1._01_1._02
         }
 
         private void Jouer_Button_Click(object sender, RoutedEventArgs e)
-        {          
+        {
+            this.DialogResult = true;
+        }
+
+
+            private void Parametre_Button_Click(object sender, RoutedEventArgs e)
+        {
             this.Close();
+        }
+
+      
+
+        private void Annuler_Button_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = false;
         }
     }
 }

@@ -11,13 +11,13 @@
         KeyDown="Window_KeyDown" 
         KeyUp="Window_KeyUp">
     <Canvas Name="myCanvas" Focusable="True" >
-        <Rectangle x:Name="ArrierePlan" HorizontalAlignment="Left" Height="500"  VerticalAlignment="Top" Width="1435" Fill="orange"/>
-        <Rectangle x:Name="ArrierePlan2" HorizontalAlignment="Left" Height="500"  VerticalAlignment="Top" Width="1435" Fill="LightGreen" Canvas.Left="1435"/>
+        <Rectangle x:Name="ArrierePlan" Height="500" Width="1435" Fill="orange" HorizontalAlignment="Left" Canvas.Left="10" VerticalAlignment="Center"/>
+        <Rectangle x:Name="ArrierePlan2" Height="500" Width="1435" Fill="LightGreen" Canvas.Left="1435"/>
         <Rectangle x:Name="joueur" Height="50" Stroke="Black" Width="100" Fill="#FF009CFF" Margin="100,0,0,0" Canvas.Top="220"/>
-        <Rectangle x:Name="enemie1" Height="50" Stroke="Black" Width="100" Fill="Red" Margin="800,125,0,0"/>
-        <Rectangle x:Name="enemie2" Height="50" Stroke="Black" Width="100" Fill="Red" Margin="800,190,0,0"/>
-        <Rectangle x:Name="enemie3" Height="50" Stroke="Black" Width="100" Fill="Red" Margin="800,260,0,0"/>
-        <Rectangle x:Name="enemie4" Height="50" Stroke="Black" Width="100" Fill="Red" Margin="800,325,0,0"/>
+        <Rectangle x:Name="enemie1" Height="50" Stroke="Black" Width="100" Fill="Red" Canvas.Left="1135" Canvas.Top="113" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <Rectangle x:Name="enemie2" Height="50" Stroke="Black" Width="100" Fill="Red" Canvas.Left="1135" Canvas.Top="195" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <Rectangle x:Name="enemie3" Height="50" Stroke="Black" Width="100" Fill="Red" Canvas.Left="1135" Canvas.Top="279"/>
+        <Rectangle x:Name="enemie4" Height="50" Stroke="Black" Width="100" Fill="Red" Canvas.Left="1135" Canvas.Top="360" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         <Label x:Name="TempsPasse" Content="Temps passé en vie : 00 secondes " FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="Nachlieli CLM BoldOblique"/>
     </Canvas>
 </Window>
