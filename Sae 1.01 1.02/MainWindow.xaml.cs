@@ -94,7 +94,7 @@ namespace Sae_1._01_1._02
         private void Collision()
         {
             /*joueurHitBox = new Rect(Canvas.GetLeft(joueur), Canvas.GetTop(joueur), joueur.Width, joueur.Height);*/
-
+             
             if (Canvas.GetTop(joueur) < 93)
             {
                 Canvas.SetTop(joueur, Canvas.GetTop(joueur) + 10);
