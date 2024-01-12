@@ -15,14 +15,18 @@ using System.Windows.Shapes;
 namespace Sae_1._01_1._02
 {
     /// <summary>
-    /// Logique d'interaction pour Parametres.xaml
+    /// Logique d'interaction pour Difficulté.xaml
     /// </summary>
-    public partial class Parametres : Window
+    public partial class Difficulté : Window
     {
-        public Parametres()
+        public Difficulté()
         {
             InitializeComponent();
-        
+        }
+
+        private void Selection(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = true;
         }
     }
 }

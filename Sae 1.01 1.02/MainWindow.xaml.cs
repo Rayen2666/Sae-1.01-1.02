@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -39,8 +40,8 @@ namespace Sae_1._01_1._02
         int speed2;
         int speed3;
         int speed4;
-        
 
+        
 
         private ImageBrush playerSkin = new ImageBrush();
 
@@ -50,28 +51,41 @@ namespace Sae_1._01_1._02
         ImageBrush enemie4Sprite = new ImageBrush();
         ImageBrush ArrierePlanSprite = new ImageBrush();
         DispatcherTimer jeuTimer = new DispatcherTimer();
-     
+        
        
         
 
         public MainWindow()
         {
             InitializeComponent();
+
+            Menu fenetreDebut = new Menu();
+            Difficulté difficulte = new Difficulté();
+            fenetreDebut.ShowDialog();
+            if (fenetreDebut.DialogResult == false)
+                Application.Current.Shutdown();
+            else if (fenetreDebut.DialogResult == true)
+            {
+                difficulte.ShowDialog();
+                
+            }
+
+            
+          
+            
+            
+            DebutJeu();
             // chargement de l’image du joueur 
             playerSkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "formule1.png"));
             // assignement de skin du joueur au rectangle associé
             joueur.Fill = playerSkin;
-            Menu fenetreDebut = new Menu();
-            fenetreDebut.ShowDialog();
-
             ArrierePlanSprite.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "image/Fond.png"));
             ArrierePlan.Fill = ArrierePlanSprite;
             ArrierePlan2.Fill = ArrierePlanSprite;
 
-            jeuTimer.Interval = TimeSpan.FromMilliseconds(17);
-            jeuTimer.Tick += Jeu; 
-            DebutJeu();
- 
+                jeuTimer.Interval = TimeSpan.FromMilliseconds(17);
+                jeuTimer.Tick += Jeu;
+            
         }
 
 
@@ -91,7 +105,7 @@ namespace Sae_1._01_1._02
             enemie4.Fill = enemie4Sprite;
         }
 
-        
+
 
         private void Jeu(object sender, EventArgs e)
         {
@@ -103,11 +117,11 @@ namespace Sae_1._01_1._02
             Canvas.SetLeft(ArrierePlan, Canvas.GetLeft(ArrierePlan) - 10);
             Canvas.SetLeft(ArrierePlan2, Canvas.GetLeft(ArrierePlan2) - 10);
 
-           
-            speed1 = random.Next(15,25);
-            speed2 = random.Next(20,25);
-            speed3 = random.Next(27,32);
-            speed4 = random.Next(25,35);
+
+            speed1 = random.Next(15, 25);
+            speed2 = random.Next(20, 25);
+            speed3 = random.Next(27, 32);
+            speed4 = random.Next(25, 35);
 
 
             Canvas.SetLeft(enemie1, Canvas.GetLeft(enemie1) - speed1);
@@ -115,14 +129,16 @@ namespace Sae_1._01_1._02
             Canvas.SetLeft(enemie3, Canvas.GetLeft(enemie3) - speed3);
             Canvas.SetLeft(enemie4, Canvas.GetLeft(enemie4) - speed4);
 
-
+            
             Bouger_Joueur();
             ArrierePlanEnMouvement();
             /*CollisionHaut();*/
             Collision();
 
-            
         }
+            
+
+        
 
         /*private void CollisionHaut()
         {
@@ -156,8 +172,8 @@ namespace Sae_1._01_1._02
         private void ArrierePlanEnMouvement()
         {
             // déplacez l'arrière-plan de 10 pixels vers la gauche à chaque tick (1 tick = 17ms)
-            Canvas.SetLeft(ArrierePlan, Canvas.GetLeft(ArrierePlan) - 10);
-            Canvas.SetLeft(ArrierePlan2, Canvas.GetLeft(ArrierePlan2) - 10);
+            Canvas.SetLeft(ArrierePlan, Canvas.GetLeft(ArrierePlan) - 5);
+            Canvas.SetLeft(ArrierePlan2, Canvas.GetLeft(ArrierePlan2) - 5);
 
             // code de défilement de parallaxe pour c#
             // le code ci-dessous fera défiler l'arrière-plan simultanément et le fera paraître sans fin

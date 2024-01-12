@@ -39,30 +39,30 @@
             x:Name="enemie1"
             Width="100"
             Height="50"
-            Margin="800,125,0,0"
+          
             Fill="Red"
-            Stroke="Black" />
+            Stroke="Black" Canvas.Left="1144" Canvas.Top="79" />
         <Rectangle
             x:Name="enemie2"
             Width="100"
             Height="50"
-            Margin="800,190,0,0"
+          
             Fill="Red"
-            Stroke="Black" />
+            Stroke="Black" Canvas.Left="1144" Canvas.Top="165" />
         <Rectangle
             x:Name="enemie3"
             Width="100"
             Height="50"
-            Margin="800,260,0,0"
+           
             Fill="Red"
-            Stroke="Black" />
+            Stroke="Black" Canvas.Left="1144" Canvas.Top="250" />
         <Rectangle
             x:Name="enemie4"
             Width="100"
             Height="50"
-            Margin="800,325,0,0"
+          
             Fill="Red"
-            Stroke="Black" />
+            Stroke="Black" Canvas.Left="1144" Canvas.Top="342" />
         <!--
         <Rectangle
             x:Name="bordure1"
