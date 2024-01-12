@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Sae_1._01_1._02"
         mc:Ignorable="d"
-        Title="Menu" Height="500" Width="900">
+        Title="Menu" Height="500" Width="900"
+        WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="776*"/>

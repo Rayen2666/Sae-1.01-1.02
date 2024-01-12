@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Sae_1._01_1._02
 {
@@ -26,6 +27,7 @@ namespace Sae_1._01_1._02
     {
         // booléens pour monter et descendre
         bool goUp, goDown = false;
+
         int vitesseJoueur = 10;
         int vitesseEnnemi = 10;
 
@@ -33,26 +35,29 @@ namespace Sae_1._01_1._02
         Rect bordure1HitBox;
         Rect bordure2HitBox;
 
-         
-        Random random = new Random();
-        int speed1;
-        int speed2;
-        int speed3;
-        int speed4;
-        
-
-
         private ImageBrush playerSkin = new ImageBrush();
 
-        ImageBrush enemie1Sprite = new ImageBrush();
-        ImageBrush enemie2Sprite = new ImageBrush();
-        ImageBrush enemie3Sprite = new ImageBrush();
-        ImageBrush enemie4Sprite = new ImageBrush();
+        ImageBrush enemie1Skin = new ImageBrush();
+        ImageBrush enemie2Skin = new ImageBrush();
+        ImageBrush enemie3Skin = new ImageBrush();
+        ImageBrush enemie4Skin = new ImageBrush();
         ImageBrush ArrierePlanSprite = new ImageBrush();
         DispatcherTimer jeuTimer = new DispatcherTimer();
-     
-       
-        
+
+        Random vitesse = new Random();
+
+        public int vitesse1 = 0;
+        public int vitesse2 = 0;
+        public int vitesse3 = 0;
+        public int vitesse4 = 0;
+
+        Random rand = new Random();
+
+        int[] enemie1Position = { 115, 120, 125};
+
+        int totalEnemie = 0;
+
+        private List<Rectangle> itemsToRemove = new List<Rectangle>();
 
         public MainWindow()
         {
@@ -71,7 +76,11 @@ namespace Sae_1._01_1._02
             jeuTimer.Interval = TimeSpan.FromMilliseconds(17);
             jeuTimer.Tick += Jeu; 
             DebutJeu();
- 
+
+            vitesse1 = vitesse.Next(10, 30);
+            vitesse2 = vitesse.Next(10, 30);
+            vitesse3 = vitesse.Next(10, 30);
+            vitesse4 = vitesse.Next(10, 30);
         }
 
 
@@ -81,60 +90,119 @@ namespace Sae_1._01_1._02
             jeuTimer.Start();
             goUp = false;
             goDown = false;
-            enemie1Sprite.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "enemie1.png"));
-            enemie1.Fill = enemie1Sprite;
-            enemie2Sprite.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "enemie2.png"));
-            enemie2.Fill = enemie2Sprite;
-            enemie3Sprite.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "enemie3.png"));
-            enemie3.Fill = enemie3Sprite;
-            enemie4Sprite.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "enemie4.png"));
-            enemie4.Fill = enemie4Sprite;
+            enemie1Skin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "enemie1.png"));
+            enemie1.Fill = enemie1Skin;
+            enemie2Skin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "enemie2.png"));
+            enemie2.Fill = enemie2Skin;
+            enemie3Skin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "enemie3.png"));
+            enemie3.Fill = enemie3Skin;
+            enemie4Skin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "enemie4.png"));
+            enemie4.Fill = enemie4Skin;
         }
 
-        
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+        /*------------------------------------------------------------------↓↓↓↓↓↓-TOUCHE HAUT BAS-↓↓↓↓↓↓----------------------------------------------------------------*/
+
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Up)
+            {
+                goUp = false;
+            }
+            if (e.Key == Key.Down)
+            {
+                goDown = false;
+            }
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Up)
+            {
+                goUp = true;
+            }
+            if (e.Key == Key.Down)
+            {
+                goDown = true;
+            }
+        }
+        /*-----------------------------------------------------------------↑↑↑↑↑↑--TOUCHE HAUT BAS-↑↑↑↑↑↑----------------------------------------------------------------*/
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+
+
 
         private void Jeu(object sender, EventArgs e)
         {
-            // création d'un rectangle joueur pour la détection de collision
-            /*Rect joueur = new Rect(Canvas.GetLeft(joueur1), Canvas.GetTop(joueur1), joueur1.Width, joueur1.Height);*/
-
-
             // déplacez l'arrière-plan de 10 pixels vers la gauche à chaque tick (1 tick = 17ms)
             Canvas.SetLeft(ArrierePlan, Canvas.GetLeft(ArrierePlan) - 10);
             Canvas.SetLeft(ArrierePlan2, Canvas.GetLeft(ArrierePlan2) - 10);
 
-           
-            speed1 = random.Next(15,25);
-            speed2 = random.Next(20,25);
-            speed3 = random.Next(27,32);
-            speed4 = random.Next(25,35);
-
-
-            Canvas.SetLeft(enemie1, Canvas.GetLeft(enemie1) - speed1);
-            Canvas.SetLeft(enemie2, Canvas.GetLeft(enemie2) - speed2);
-            Canvas.SetLeft(enemie3, Canvas.GetLeft(enemie3) - speed3);
-            Canvas.SetLeft(enemie4, Canvas.GetLeft(enemie4) - speed4);
-
+            Canvas.SetLeft(enemie1, Canvas.GetLeft(enemie1) - vitesse1);
+            Canvas.SetLeft(enemie2, Canvas.GetLeft(enemie2) - vitesse2);
+            Canvas.SetLeft(enemie3, Canvas.GetLeft(enemie3) - vitesse3);
+            Canvas.SetLeft(enemie4, Canvas.GetLeft(enemie4) - vitesse4);
 
             Bouger_Joueur();
             ArrierePlanEnMouvement();
-            /*CollisionHaut();*/
             Collision();
+            /*MakeEnemies(10);*/
 
-            
+            voiturePasse.Content = "Voiture passee : " + totalEnemie;
+
+            // si l'obstacle dépasse -50 emplacement
+            if (Canvas.GetLeft(enemie1) < -50)
+            {
+                /*itemsToRemove.Add(enemie1);*/
+                // régler la position gauche de l'obstacle à 950 pixels
+                Canvas.SetLeft(enemie1, 1000);
+                // définit aléatoirement la position supérieure de l'obstacle à partir du tableau que nous avons créé précédemment
+                // cela choisira aléatoirement une position dans le tableau afin qu'elle ne soit pas la même à chaque fois qu'elle apparaîtra sur l'écran
+                Canvas.SetTop(enemie1, enemie1Position[rand.Next(0, enemie1Position.Length)]);
+                // ajouter 1 au score
+                /*score += 1;*/
+            }
         }
 
-        /*private void CollisionHaut()
+
+
+
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+        /*---------------------------------------------------------------------↓↓↓↓↓↓-METHODES-↓↓↓↓↓↓--------------------------------------------------------------------*/
+
+        /*private void MakeEnemies(int limit)
         {
-            if(joueurHitBox.IntersectsWith(bordure1HitBox))
+            int left = 0;
+            // on conserve le max d’ennemis
+            totalEnemie = limit;
+            for (int i = 0; i < limit; i++)
             {
-                Canvas.SetTop(joueur, Canvas.GetTop(bordure1) + joueur.Height);
+                ImageBrush enemieSkin = new ImageBrush();
+                Rectangle newEnemie = new Rectangle
+                {
+                    Tag = "enemy",
+                    Height = 45,
+                    Width = 45,
+                    Fill = enemieSkin,
+                };
+                Canvas.SetTop(newEnemie, 30);
+                Canvas.SetLeft(newEnemie, left);
+                myCanvas.Children.Add(newEnemie);
+                left -= 60;
+
+                *//*// incrémente les images des ennemis (max 8)
+                enemyImages++;
+                if (enemyImages > 8)
+                    enemyImages = 1;
+                enemySkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "images/invader" + enemie1Skin + ".png"));*//*
             }
         }*/
 
-        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-        /*----------------------------------------------------------------------METHODES---------------------------------------------------------------------------------*/
-        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+        private void NouveauEnemie(int limit)
+        {
+
+        }
+
         private void Collision()
         {
             /*joueurHitBox = new Rect(Canvas.GetLeft(joueur), Canvas.GetTop(joueur), joueur.Width, joueur.Height);*/
@@ -149,15 +217,14 @@ namespace Sae_1._01_1._02
             }
 
         }
-
-
+        
 
 
         private void ArrierePlanEnMouvement()
         {
             // déplacez l'arrière-plan de 10 pixels vers la gauche à chaque tick (1 tick = 17ms)
-            Canvas.SetLeft(ArrierePlan, Canvas.GetLeft(ArrierePlan) - 10);
-            Canvas.SetLeft(ArrierePlan2, Canvas.GetLeft(ArrierePlan2) - 10);
+            Canvas.SetLeft(ArrierePlan, Canvas.GetLeft(ArrierePlan) - 5);
+            Canvas.SetLeft(ArrierePlan2, Canvas.GetLeft(ArrierePlan2) - 5);
 
             // code de défilement de parallaxe pour c#
             // le code ci-dessous fera défiler l'arrière-plan simultanément et le fera paraître sans fin
@@ -191,29 +258,8 @@ namespace Sae_1._01_1._02
             }
         }
 
-        private void Window_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Up)
-            {
-                goUp = false;
-            }
-            if (e.Key == Key.Down)
-            {
-                goDown = false;
-            }
-        }
-
-        private void Window_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Up)
-            {
-                goUp = true;
-            }
-            if (e.Key == Key.Down)
-            {
-                goDown = true;
-            }
-        }
+        /*---------------------------------------------------------------------↑↑↑↑↑↑-METHODES-↑↑↑↑↑↑--------------------------------------------------------------------*/
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
     }
 
 
