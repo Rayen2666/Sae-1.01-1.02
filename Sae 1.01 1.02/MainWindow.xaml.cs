@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -43,6 +44,9 @@ namespace Sae_1._01_1._02
         ImageBrush enemie4Skin = new ImageBrush();
         ImageBrush ArrierePlanSprite = new ImageBrush();
         DispatcherTimer jeuTimer = new DispatcherTimer();
+        
+       
+        
 
         Random vitesse = new Random();
 
@@ -62,17 +66,34 @@ namespace Sae_1._01_1._02
         public MainWindow()
         {
             InitializeComponent();
+
+            Menu fenetreDebut = new Menu();
+            Difficulté difficulte = new Difficulté();
+            fenetreDebut.ShowDialog();
+            if (fenetreDebut.DialogResult == false)
+                Application.Current.Shutdown();
+            else if (fenetreDebut.DialogResult == true)
+            {
+                difficulte.ShowDialog();
+                
+            }
+
+            
+          
+            
+            
+            DebutJeu();
             // chargement de l’image du joueur 
             playerSkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "formule1.png"));
             // assignement de skin du joueur au rectangle associé
             joueur.Fill = playerSkin;
-            Menu fenetreDebut = new Menu();
-            fenetreDebut.ShowDialog();
-
             ArrierePlanSprite.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "image/Fond.png"));
             ArrierePlan.Fill = ArrierePlanSprite;
             ArrierePlan2.Fill = ArrierePlanSprite;
 
+                jeuTimer.Interval = TimeSpan.FromMilliseconds(17);
+                jeuTimer.Tick += Jeu;
+            
             jeuTimer.Interval = TimeSpan.FromMilliseconds(17);
             jeuTimer.Tick += Jeu; 
             DebutJeu();
@@ -99,6 +120,7 @@ namespace Sae_1._01_1._02
             enemie4Skin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "enemie4.png"));
             enemie4.Fill = enemie4Skin;
         }
+
 
         /*---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         /*------------------------------------------------------------------↓↓↓↓↓↓-TOUCHE HAUT BAS-↓↓↓↓↓↓----------------------------------------------------------------*/
@@ -138,6 +160,11 @@ namespace Sae_1._01_1._02
             Canvas.SetLeft(ArrierePlan, Canvas.GetLeft(ArrierePlan) - 10);
             Canvas.SetLeft(ArrierePlan2, Canvas.GetLeft(ArrierePlan2) - 10);
 
+
+            speed1 = random.Next(15, 25);
+            speed2 = random.Next(20, 25);
+            speed3 = random.Next(27, 32);
+            speed4 = random.Next(25, 35);
             Canvas.SetLeft(enemie1, Canvas.GetLeft(enemie1) - vitesse1);
             Canvas.SetLeft(enemie2, Canvas.GetLeft(enemie2) - vitesse2);
             Canvas.SetLeft(enemie3, Canvas.GetLeft(enemie3) - vitesse3);
@@ -164,8 +191,17 @@ namespace Sae_1._01_1._02
             }
         }
 
+            
+            Bouger_Joueur();
+            ArrierePlanEnMouvement();
+            /*CollisionHaut();*/
+            Collision();
 
 
+        }
+            
+
+        
 
         /*---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         /*---------------------------------------------------------------------↓↓↓↓↓↓-METHODES-↓↓↓↓↓↓--------------------------------------------------------------------*/

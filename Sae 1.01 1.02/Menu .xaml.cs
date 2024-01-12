@@ -19,9 +19,17 @@ namespace Sae_1._01_1._02
     /// </summary>
     public partial class Menu : Window
     {
+
+        ImageBrush image = new ImageBrush();
+
+
         public Menu()
         {
             InitializeComponent();
+            image.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "Image2.png"));
+            image2.Fill = image;
+
+
         }
 
         private void Jouer_Button_Click(object sender, RoutedEventArgs e)
@@ -32,7 +40,8 @@ namespace Sae_1._01_1._02
 
             private void Parametre_Button_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Parametres fenetreParametres = new Parametres();
+            fenetreParametres.ShowDialog();
         }
 
       
@@ -40,6 +49,7 @@ namespace Sae_1._01_1._02
         private void Annuler_Button_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;
+           
         }
     }
 }

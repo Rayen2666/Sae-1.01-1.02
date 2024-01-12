@@ -6,7 +6,13 @@
     <RootNamespace>Sae_1._01_1._02</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <PackageIcon></PackageIcon>
+    <ApplicationIcon>Image2.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Image2.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Update="enemie1.png">
@@ -20,6 +26,11 @@
     </None>
     <None Update="enemie4.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Image2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
     </None>
     <None Update="image\Fond.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
