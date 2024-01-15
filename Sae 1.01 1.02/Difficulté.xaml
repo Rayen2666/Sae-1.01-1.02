@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Sae_1._01_1._02"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Title="Difficulté" Height="450" Width="800">
     <Grid>
         <ComboBox 
