@@ -41,25 +41,25 @@
             Width="100"
             Height="50"
             Fill="Red"
-            Stroke="Black" Canvas.Left="800" Canvas.Top="120" HorizontalAlignment="Center" VerticalAlignment="Top" />
+            Stroke="Black" Canvas.Left="868" Canvas.Top="120" HorizontalAlignment="Left" VerticalAlignment="Center" />
         <Rectangle
             x:Name="enemie2"
             Width="100"
             Height="50"
             Fill="Red"
-            Stroke="Black" Canvas.Left="800" Canvas.Top="190" />
+            Stroke="Black" Canvas.Left="1138" Canvas.Top="190" HorizontalAlignment="Left" VerticalAlignment="Center" />
         <Rectangle
             x:Name="enemie3"
             Width="100"
             Height="50"
             Fill="Red"
-            Stroke="Black" Canvas.Left="800" Canvas.Top="260" />
+            Stroke="Black" Canvas.Left="1138" Canvas.Top="260" HorizontalAlignment="Left" VerticalAlignment="Center" />
         <Rectangle
             x:Name="enemie4"
             Width="100"
             Height="50"
             Fill="Red"
-            Stroke="Black" Canvas.Left="800" Canvas.Top="330" />
+            Stroke="Black" Canvas.Left="868" Canvas.Top="330" HorizontalAlignment="Left" VerticalAlignment="Center" />
         <!--
         <Rectangle
             x:Name="bordure1"
@@ -72,12 +72,12 @@
             Stroke="Black" />
         -->
         <Label
-            x:Name="voiturePasse"
+            x:Name="tempsPasse"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             FontFamily="Nachlieli CLM BoldOblique"
             FontSize="24">
-                Voiture passee :
+            Temps passe :
         </Label>
         <!--
         <Rectangle
