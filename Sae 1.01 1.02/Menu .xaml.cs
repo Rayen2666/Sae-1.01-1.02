@@ -21,14 +21,16 @@ namespace Sae_1._01_1._02
     {
 
         ImageBrush image = new ImageBrush();
+        ImageBrush image3 = new ImageBrush();
 
 
         public Menu()
         {
             InitializeComponent();
-            image.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "Image2.png"));
+            image.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "ImageMenu.jpg"));
             image2.Fill = image;
-
+            image3.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "F1finite.png"));
+            F1finite.Fill = image3;
 
         }
 
@@ -51,5 +53,7 @@ namespace Sae_1._01_1._02
             this.DialogResult = false;
            
         }
+
+       
     }
 }

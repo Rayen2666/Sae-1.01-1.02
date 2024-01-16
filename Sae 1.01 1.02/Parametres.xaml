@@ -5,8 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Sae_1._01_1._02"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Title="Parametres" Height="450" Width="800">
     <Grid>
-        
+        <Button Content="Bouton_Haut" HorizontalAlignment="Left" Height="89" Margin="358,69,0,0" VerticalAlignment="Top" Width="120"/>
+        <Button Content="Bouton_Bas" HorizontalAlignment="Left" Height="73" Margin="330,294,0,0" VerticalAlignment="Top" Width="176"/>
+        <Button Content="Bouton_Droite" HorizontalAlignment="Left" Height="93" Margin="570,150,0,0" VerticalAlignment="Top" Width="195"/>
+        <Button Content="Bouton_Gauche" HorizontalAlignment="Left" Height="93" Margin="56,145,0,0" VerticalAlignment="Top" Width="218"/>
+
     </Grid>
 </Window>

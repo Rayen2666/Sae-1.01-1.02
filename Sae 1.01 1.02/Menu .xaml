@@ -15,13 +15,12 @@
             <ColumnDefinition Width="5*"/>
 
         </Grid.ColumnDefinitions>
-        <Label Content="F1finite" HorizontalAlignment="Left" Margin="90,55,0,0" VerticalAlignment="Top" Width="246" FontSize="72" FontFamily="Tw Cen MT" HorizontalContentAlignment="Center" Foreground="#FF0E18C1"/>
-        <Button Content="JOUER" HorizontalAlignment="Left" Height="56" Margin="423,252,0,0" VerticalAlignment="Top" Width="160" Click="Jouer_Button_Click" FontFamily="Segoe UI Black" FontSize="22" Background="Red"/>
-
-        <Label Content="Veuillez choisir un niveau de difficulté :" HorizontalAlignment="Left" Margin="510,117,0,0" VerticalAlignment="Top" Width="220"/>
-        <Button Content="Parametres" HorizontalAlignment="Left" Height="54" Margin="540,370,0,0" VerticalAlignment="Top" Width="160" Click="Parametre_Button_Click"/>
-        <Button Content="Annuler" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="56" Margin="634,252,0,0" VerticalAlignment="Top" Width="150" Click="Annuler_Button_Click"/>
-        <Rectangle x:Name="image2" HorizontalAlignment="Left" Height="228" Margin="72,182,0,0" Stroke="Black" VerticalAlignment="Top" Width="264"/>
+        <Rectangle x:Name="image2" HorizontalAlignment="Left" Height="529"  VerticalAlignment="Top" Width="900" Grid.ColumnSpan="4"/>
+        <Button Content="JOUER" HorizontalAlignment="Left" Height="56" Margin="351,186,0,0" VerticalAlignment="Top" Width="160" Click="Jouer_Button_Click" FontFamily="Segoe UI Black" FontSize="22" Background="Transparent" BorderBrush="{x:Null}"      />
+        <Button Content="Parametres" HorizontalAlignment="Left" Height="54" Margin="351,264,0,0" VerticalAlignment="Top" Width="160" Click="Parametre_Button_Click" BorderBrush="{x:Null}" FontFamily="Segoe UI Black" FontSize="18" Background="Transparent"/>
+        <Button Content="Annuler" HorizontalAlignment="Left" Height="56" Margin="351,344,0,0" VerticalAlignment="Top" Width="160" Click="Annuler_Button_Click" BorderBrush="{x:Null}" FontFamily="Segoe UI Black" FontSize="18" Background="Transparent"/>
+        <Rectangle x:Name="F1finite"  Margin="288,37,165,334"/>
+        
 
 
 

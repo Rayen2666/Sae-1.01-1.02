@@ -24,5 +24,10 @@ namespace Sae_1._01_1._02
             InitializeComponent();
         
         }
+
+        private void Button_PreviewKeyDown()
+        {
+
+        }
     }
 }

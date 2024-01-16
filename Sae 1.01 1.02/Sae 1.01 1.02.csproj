@@ -27,10 +27,16 @@
     <None Update="enemie4.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="F1finite.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Image2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
+    </None>
+    <None Update="ImageMenu.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="image\Fond.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
