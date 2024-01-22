@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Media;
 using System.Numerics;
 using System.Reflection;
 using System.Text;
@@ -28,64 +29,109 @@ namespace Sae_1._01_1._02
     public partial class MainWindow : Window
     {
         // booléens pour monter et descendre
-        bool goUp, goDown, goLeft, goRight = false;
+        private bool goUp, goDown, goLeft, goRight = false;
 
-        int vitesseJoueur = 5;
+        private int vitesseJoueur = 7;
 
-        Rect joueurHitBox;
-        Rect bordure1HitBox;
-        Rect bordure2HitBox;
-        Rect enemie1HitBox;
-        Rect enemie2HitBox;
-        Rect enemie3HitBox;
-        Rect enemie4HitBox;
+        private Rect joueurHitBox;
+        private Rect ennemie1HitBox;
+        private Rect ennemie2HitBox;
+        private Rect ennemie3HitBox;
+        private Rect ennemie4HitBox;
 
-        bool gameover = false;
+        private bool gameover = false;
 
-        private ImageBrush playerSkin = new ImageBrush();
+        private ImageBrush joueurSkin = new ImageBrush();
+        private ImageBrush imageButQuitterPause = new ImageBrush();
 
-        ImageBrush enemie1Skin = new ImageBrush();
-        ImageBrush enemie2Skin = new ImageBrush();
-        ImageBrush enemie3Skin = new ImageBrush();
-        ImageBrush enemie4Skin = new ImageBrush();
-        ImageBrush ArrierePlanSprite = new ImageBrush();
-        DispatcherTimer jeuTimer = new DispatcherTimer();
-
-
-
-
+        private ImageBrush ennemie1Skin = new ImageBrush();
+        private ImageBrush ennemie2Skin = new ImageBrush();
+        private ImageBrush ennemie3Skin = new ImageBrush();
+        private ImageBrush ennemie4Skin = new ImageBrush();
+        private ImageBrush ArrierePlanSprite = new ImageBrush();
+        private DispatcherTimer jeuTimer = new DispatcherTimer();
 
         private int tempsVoiture = 0;
 
-        int compteurtemps;
-        Random vitesse = new Random();
+        private int compteurtemps=0;
 
-        public int vitesse1 = 0;
-        public int vitesse2 = 0;
-        public int vitesse3 = 0;
-        public int vitesse4 = 0;
+        public Key toucheHaut, toucheBas, toucheGauche, toucheDroite;
+        
 
-        Random rand = new Random();
+        private int vitesse1 = 0;
+        private int vitesse2 = 0;
+        private int vitesse3 = 0;
+        private int vitesse4 = 0;
 
-        int[] enemie1Position = { 115, 120, 125 };
-        int[] enemie1Position = { 115, 120, 125 };
-        int[] enemie2Position = { 185, 190, 195 };
-        int[] enemie3Position = { 255, 260, 265 };
-        int[] enemie4Position = { 325, 330, 335 };
-        int[] tempsEntreEnemie = {60, 120, 180, 240, 320};
+        private Random aleatoire = new Random();
 
-        int totalEnemie = 0;
+        private int[] ennemie1Position = { 115, 120, 125 };
+        private int[] ennemie2Position = { 185, 190, 195 };
+        private int[] ennemie3Position = { 255, 260, 265 };
+        private int[] ennemie4Position = { 325, 330, 335 };
 
-        List<Rectangle> itemRemover = new List<Rectangle>();
-        int numeroVoiture;
+        private SoundPlayer Klaxon = new SoundPlayer(soundLocation: "Son/KlaxonVoiture.wav");
 
+        private int numeroVoitureEnnemie1;
+        private int numeroVoitureEnnemie2;
+        private int numeroVoitureEnnemie3;
+        private int numeroVoitureEnnemie4;
+
+        private readonly int RESET = 0;
+
+        
+
+        private readonly int DELAI_ENNEMIE = 150;
+
+        //Arriere plan
+        private readonly int VITESSE_ARRIERE_PLAN = 10;
+        private readonly int ARRIERE_PLAN_REAPPARITION = -3370;
+
+        //Disparition et réapparition 
+        private readonly int ENNEMIE_DISPARITION = -50;
+        private readonly int ENNEMIE_REAPPARITION = 3000;
+        
+        //Temps
+        private readonly int TEMPS_SECONDE = 30;
+
+        //Choix du skin enemie
+        private readonly int SKIN_MIN = 1;
+        private readonly int SKIN_MAX = 15;
+
+        //Remise des enemies à leur place initiale
+        private readonly int RESET_POSITION_GAUCHE_ENNEMIE1 = 2254;
+        private readonly int RESET_POSITION_GAUCHE_ENNEMIE2 = 2707;
+        private readonly int RESET_POSITION_HAUT_ENNEMIE1 = 120;
+        private readonly int RESET_POSITION_HAUT_ENNEMIE2 = 191;
+        private readonly int RESET_POSITION_HAUT_ENNEMIE3 = 260;
+        private readonly int RESET_POSITION_HAUT_ENNEMIE4 = 330;
+        private readonly int RESET_POSITION_GAUCHE_JOUEUR = 200;
+        private readonly int RESET_POSITION_HAUT_JOUEUR = 220;
+
+        //Collision joueur avec le bord
+        private readonly int COLLISION_BORDURE_HAUT = 93;
+        private readonly int COLLISION_BORDURE_BAS = 357;
+        private readonly int COLLISION_BORDURE_GAUCHE = 20;
+        private readonly int COLLISION_BORDURE_DROITE = 1200;
+        private readonly int COLLISION_JOUEUR = 7;
+
+        //Difficulté ennemies
+        int tempsMin;
+        int tempsMax;
+        int vitesseMin;
+        int vitesseMax;
+
+
+        private Difficulte difficulte = new Difficulte();
 
         public MainWindow()
         {
             InitializeComponent();
 
+            
+
             Menu fenetreDebut = new Menu();
-            Difficulté difficulte = new Difficulté();
+            Difficulte difficulte = new Difficulte();
             fenetreDebut.ShowDialog();
             if (fenetreDebut.DialogResult == false)
                 Application.Current.Shutdown();
@@ -95,38 +141,35 @@ namespace Sae_1._01_1._02
 
             }
 
+            toucheHaut = fenetreDebut.toucheHaut;
+            toucheBas = fenetreDebut.toucheBas;
+            toucheDroite = fenetreDebut.toucheDroite;
+            toucheGauche = fenetreDebut.toucheGauche;
 
 
 
+            tempsMin = difficulte.tempsMin;
+            tempsMax = difficulte.tempsMax;
+            vitesseMin = difficulte.vitesseMin;
+            vitesseMax = difficulte.vitesseMax;
 
+
+            imageButQuitterPause.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "image/croix.png"));
+            butQuitterPause.Background = imageButQuitterPause;
             // chargement de l’image du joueur 
-            playerSkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "formule1.png"));
+            joueurSkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "image/formule1.png"));
             // assignement de skin du joueur au rectangle associé
-            joueur.Fill = playerSkin;
+            joueur.Fill = joueurSkin;
             ArrierePlanSprite.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "image/Fond.png"));
             ArrierePlan.Fill = ArrierePlanSprite;
             ArrierePlan2.Fill = ArrierePlanSprite;
 
             jeuTimer.Interval = TimeSpan.FromMilliseconds(17);
             jeuTimer.Tick += Jeu;
-                  
-
-            /*vitesse1 = vitesse.Next(10, 30);
-            vitesse2 = vitesse.Next(10, 30);
-            vitesse3 = vitesse.Next(10, 30);
-            vitesse4 = vitesse.Next(10, 30);
 
             jeuTimer.Start();
             DebutJeu();
-            vitesse4 = vitesse.Next(10, 30);*/
-
-            vitesse1 = 10;
-            vitesse2 = 10;
-            vitesse3 = 10;
-            vitesse4 = 10;
         }
-
-
 
 
         private void DebutJeu()
@@ -134,36 +177,38 @@ namespace Sae_1._01_1._02
             jeuTimer.Start();
             goUp = false;
             goDown = false;
-            enemie1Skin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "enemie1.png"));
-            enemie1.Fill = enemie1Skin;
-            enemie2Skin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "enemie2.png"));
-            enemie2.Fill = enemie2Skin;
-            enemie3Skin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "enemie3.png"));
-            enemie3.Fill = enemie3Skin;
-            enemie4Skin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "enemie4.png"));
-            enemie4.Fill = enemie4Skin;
+
+            ennemie1Skin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "image/enemie1.png"));
+            ennemie1.Fill = ennemie1Skin;
+            ennemie2Skin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "image/enemie2.png"));
+            ennemie2.Fill = ennemie2Skin;
+            ennemie3Skin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "image/enemie3.png"));
+            ennemie3.Fill = ennemie3Skin;
+            ennemie4Skin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "image/enemie4.png"));
+            ennemie4.Fill = ennemie4Skin;
+
             gameover = false;
         }
 
 
-        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-        /*------------------------------------------------------------------↓↓↓↓↓↓-TOUCHE HAUT BAS-↓↓↓↓↓↓----------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*------------------------------------------------------------------↓↓↓↓↓↓-TOUCHE HAUT BAS-↓↓↓↓↓↓-----------------------------------------------------------------------------------*/
 
         private void Window_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Up)
+            if (e.Key == Key.Up || e.Key == toucheHaut)
             {
                 goUp = false;
             }
-            if (e.Key == Key.Down)
+            if (e.Key == Key.Down || e.Key == toucheBas)
             {
                 goDown = false;
             }
-            if (e.Key == Key.Left)
+            if (e.Key == Key.Left || e.Key == toucheGauche)
             {
                 goLeft = false;
             }
-            if (e.Key == Key.Right)
+            if (e.Key == Key.Right || e.Key == toucheDroite)
             {
                 goRight = false;
             }
@@ -171,41 +216,50 @@ namespace Sae_1._01_1._02
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Up)
+            if (e.Key == Key.Up || e.Key == toucheHaut)
             {
                 goUp = true;
             }
-            if (e.Key == Key.Down)
+            if (e.Key == Key.Down || e.Key == toucheBas)
             {
                 goDown = true;
             }
-            if (e.Key == Key.Left)
+            if (e.Key == Key.Left || e.Key == toucheGauche)
             {
                 goLeft = true;
             }
-            if (e.Key == Key.Right)
+            if (e.Key == Key.Right || e.Key == toucheDroite)
             {
                 goRight = true;
             }
+            if (e.Key == Key.Space)
+            {
+                Klaxon.Play();
+            }
+
+
+            if (e.Key == Key.P)
+            {
+                fenetrePause.Visibility = Visibility.Visible;
+                butQuitterPause.Visibility = Visibility.Visible;
+                jeuTimer.Stop();
+            }
         }
-        /*-----------------------------------------------------------------↑↑↑↑↑↑--TOUCHE HAUT BAS-↑↑↑↑↑↑----------------------------------------------------------------*/
-        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------↑↑↑↑↑↑--TOUCHE HAUT BAS-↑↑↑↑↑↑-----------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------↓↓↓↓↓↓-JEUX-↓↓↓↓↓↓-----------------------------------------------------------------------------------------*/
 
 
         private void Jeu(object sender, EventArgs e)
         {
-
-            // déplacez l'arrière-plan de 10 pixels vers la gauche à chaque tick (1 tick = 17ms)
-            Canvas.SetLeft(ArrierePlan, Canvas.GetLeft(ArrierePlan) - 10);
-            Canvas.SetLeft(ArrierePlan2, Canvas.GetLeft(ArrierePlan2) - 10);
-
-
-            Canvas.SetLeft(enemie1, Canvas.GetLeft(enemie1) - vitesse1);
-            Canvas.SetLeft(enemie2, Canvas.GetLeft(enemie2) - vitesse2);
-            Canvas.SetLeft(enemie3, Canvas.GetLeft(enemie3) - vitesse3);
-            Canvas.SetLeft(enemie4, Canvas.GetLeft(enemie4) - vitesse4);
+            
+            Canvas.SetLeft(ennemie1, Canvas.GetLeft(ennemie1) - vitesse1);
+            Canvas.SetLeft(ennemie2, Canvas.GetLeft(ennemie2) - vitesse2);
+            Canvas.SetLeft(ennemie3, Canvas.GetLeft(ennemie3) - vitesse3);
+            Canvas.SetLeft(ennemie4, Canvas.GetLeft(ennemie4) - vitesse4);
 
             Bouger_Joueur();
             ArrierePlanEnMouvement();
@@ -213,292 +267,351 @@ namespace Sae_1._01_1._02
 
 
             compteurtemps++;
-            if (compteurtemps % 60 == 0)
+            if (compteurtemps % 30 == 0)
             {
                 tempsVoiture++;
                 tempsPasse.Content = "Temps passe : " + tempsVoiture + " secondes";
             }
 
-            VoituresEnemies();
+            VoituresEnnemies();
 
         }
 
 
+/*----------------------------------------------------------------------↑↑↑↑↑↑--JEUX-↑↑↑↑↑↑-----------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-        /*---------------------------------------------------------------------↓↓↓↓↓↓-METHODES-↓↓↓↓↓↓--------------------------------------------------------------------*/
-        
 
-        private void VoituresEnemies()
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------↓↓↓↓↓↓-METHODES-↓↓↓↓↓↓---------------------------------------------------------------------------------------*/
+
+
+        private void VoituresEnnemies()
         {
-            if (Canvas.GetLeft(enemie1) < -50)
+            if (compteurtemps % DELAI_ENNEMIE == 0)
             {
-                /*itemsToRemove.Add(enemie1);*/
-                // régler la position gauche de l'obstacle à 950 pixels
-                Canvas.SetLeft(enemie1, 1000);
-                // définit aléatoirement la position supérieure de l'obstacle à partir du tableau que nous avons créé précédemment
-                // cela choisira aléatoirement une position dans le tableau afin qu'elle ne soit pas la même à chaque fois qu'elle apparaîtra sur l'écran
-                Canvas.SetTop(enemie1, enemie1Position[rand.Next(0, enemie1Position.Length)]);
-                // ajouter 1 au score
-                /*score += 1;*/
+                vitesse1 = aleatoire.Next(vitesseMin, vitesseMax);
+                vitesse2 = aleatoire.Next(vitesseMin, vitesseMax);
+                vitesse3 = aleatoire.Next(vitesseMin, vitesseMax);
+                vitesse4 = aleatoire.Next(vitesseMin, vitesseMax);
             }
 
-                joueurHitBox = new  Rect (Canvas.GetLeft(joueur), Canvas.GetTop(joueur), joueur.Width, joueur.Height);
-                enemie1HitBox = new Rect(Canvas.GetLeft(enemie1), Canvas.GetTop(enemie1), enemie1.Width, enemie1.Height);
-                enemie2HitBox = new Rect(Canvas.GetLeft(enemie2), Canvas.GetTop(enemie2), enemie2.Width, enemie2.Height);
-                enemie3HitBox = new Rect(Canvas.GetLeft(enemie3), Canvas.GetTop(enemie3), enemie3.Width, enemie3.Height);
-                enemie4HitBox = new Rect(Canvas.GetLeft(enemie4), Canvas.GetTop(enemie4), enemie4.Width, enemie4.Height);
-
-        
+            joueurHitBox = new Rect(Canvas.GetLeft(joueur), Canvas.GetTop(joueur), joueur.Width, joueur.Height);
+            ennemie1HitBox = new Rect(Canvas.GetLeft(ennemie1), Canvas.GetTop(ennemie1), ennemie1.Width, ennemie1.Height);
+            ennemie2HitBox = new Rect(Canvas.GetLeft(ennemie2), Canvas.GetTop(ennemie2), ennemie2.Width, ennemie2.Height);
+            ennemie3HitBox = new Rect(Canvas.GetLeft(ennemie3), Canvas.GetTop(ennemie3), ennemie3.Width, ennemie3.Height);
+            ennemie4HitBox = new Rect(Canvas.GetLeft(ennemie4), Canvas.GetTop(ennemie4), ennemie4.Width, ennemie4.Height);
 
 
-            if (joueurHitBox.IntersectsWith(enemie1HitBox) || joueurHitBox.IntersectsWith(enemie2HitBox) ||
-                joueurHitBox.IntersectsWith(enemie3HitBox) || joueurHitBox.IntersectsWith(enemie4HitBox))
-                {
-                    gameover = true;
-                    jeuTimer.Stop();
-                }
-        
-             
+            if (joueurHitBox.IntersectsWith(ennemie1HitBox) || joueurHitBox.IntersectsWith(ennemie2HitBox) ||
+                joueurHitBox.IntersectsWith(ennemie3HitBox) || joueurHitBox.IntersectsWith(ennemie4HitBox))
+            {
+                Console.WriteLine("Collision");
+                gameover = true;
+                jeuTimer.Stop();
+                fenetrePerdu.Visibility = Visibility.Visible;
+            }
+
 
             if (gameover == true)
             {
 
-                enemie1.Stroke = Brushes.Black;
-                enemie1.StrokeThickness = 1;
-                enemie2.Stroke = Brushes.Black;
-                enemie2.StrokeThickness = 1;
-                enemie3.Stroke = Brushes.Black;
-                enemie3.StrokeThickness = 1;
-                enemie4.Stroke = Brushes.Black;
-                enemie4.StrokeThickness = 1;
+                ennemie1.Stroke = Brushes.Black;
+                ennemie1.StrokeThickness = 1;
+                ennemie2.Stroke = Brushes.Black;
+                ennemie2.StrokeThickness = 1;
+                ennemie3.Stroke = Brushes.Black;
+                ennemie3.StrokeThickness = 1;
+                ennemie4.Stroke = Brushes.Black;
+                ennemie4.StrokeThickness = 1;
 
                 joueur.Stroke = Brushes.Red;
                 joueur.StrokeThickness = 1;
-              
+
             }
             else
             {
-    
+
                 joueur.StrokeThickness = 0;
-                enemie1.StrokeThickness = 0;
-                enemie2.StrokeThickness = 0;
-                enemie3.StrokeThickness = 0;
-                enemie4.StrokeThickness = 0;
+                ennemie1.StrokeThickness = 0;
+                ennemie2.StrokeThickness = 0;
+                ennemie3.StrokeThickness = 0;
+                ennemie4.StrokeThickness = 0;
             }
 
-
-
-
-
-            int dkdk = rand.Next(120, 320);
-
-        }
             
-             
 
-
-
-
-
-
-
-
-
-
-            /*---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-            /*---------------------------------------------------------------------↓↓↓↓↓↓-METHODES-↓↓↓↓↓↓--------------------------------------------------------------------*/
-
-            /*private void MakeEnemies(int limit)
+            if (Canvas.GetLeft(ennemie1) < ENNEMIE_DISPARITION)
             {
-                int left = 0;
-                // on conserve le max d’ennemis
-                totalEnemie = limit;
-                for (int i = 0; i < limit; i++)
+                if (compteurtemps % (TEMPS_SECONDE * aleatoire.Next(tempsMin, tempsMax)) == RESET)
                 {
-                    ImageBrush enemieSkin = new ImageBrush();
-                    Rectangle newEnemie = new Rectangle
-                    {
-                        Tag = "enemy",
-                        Height = 45,
-                        Width = 45,
-                        Fill = enemieSkin,
-                    };
-                    Canvas.SetTop(newEnemie, 30);
-                    Canvas.SetLeft(newEnemie, left);
-                    myCanvas.Children.Add(newEnemie);
-                    left -= 60;
+                    Console.WriteLine("Temps à attendre voiture 1: " + aleatoire);
+                    numeroVoitureEnnemie1 = aleatoire.Next(SKIN_MIN, SKIN_MAX);
+                    Console.WriteLine("N° skin voiture 1: " + numeroVoitureEnnemie1);
+                    ennemie1Skin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "image/Voitures_Enemies/enemie" + numeroVoitureEnnemie1 + ".png"));
+                    ennemie1.Fill = ennemie1Skin;
 
-                    *//*// incrémente les images des ennemis (max 8)
-                    enemyImages++;
-                    if (enemyImages > 8)
-                        enemyImages = 1;
-                    enemySkin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "images/invader" + enemie1Skin + ".png"));*//*
-                }
-            }*/
-                if (compteurtemps % (60 * rand.Next(1, 6)) == 0)
-                {
-                    /*itemsToRemove.Add(enemie1); (rand.NextDouble()*5)*/
-                    // régler la position gauche de l'obstacle à 950 pixels
-                    Canvas.SetLeft(enemie1, 1000);
+                    // Faire réapparaitre l'ennemie à 3000 pixels
+                    Canvas.SetLeft(ennemie1, ENNEMIE_REAPPARITION);
                     // définit aléatoirement la position supérieure de l'obstacle à partir du tableau que nous avons créé précédemment
-                    // cela choisira aléatoirement une position dans le tableau afin qu'elle ne soit pas la même à chaque fois qu'elle apparaîtra sur l'écran
-                    Canvas.SetTop(enemie1, enemie1Position[rand.Next(0, enemie1Position.Length)]);
-                    // ajouter 1 au score
-                    /*score += 1;*/
-                    compteurtemps = 0;
+                    // cela choisi aléatoirement une position dans le tableau afin qu'elle ne soit pas la même à chaque fois qu'elle apparaîtra sur l'écran
+                    Canvas.SetTop(ennemie1, ennemie1Position[aleatoire.Next(0, ennemie1Position.Length)]);
+                    compteurtemps = RESET;
+                }
+                
+            }
+
+            if (Canvas.GetLeft(ennemie2) < ENNEMIE_DISPARITION)
+            {
+                if (compteurtemps % (TEMPS_SECONDE * aleatoire.Next(tempsMin, tempsMax)) == RESET)
+                {
+                    Console.WriteLine("Temps à attendre voiture 2: " + aleatoire);
+                    numeroVoitureEnnemie2 = aleatoire.Next(SKIN_MIN, SKIN_MAX);
+                    Console.WriteLine("N° skin voiture 2: " + numeroVoitureEnnemie2);
+                    ennemie2Skin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "image/Voitures_Enemies/enemie" + numeroVoitureEnnemie2 + ".png"));
+                    ennemie2.Fill = ennemie2Skin;
+
+                    // Faire réapparaitre l'énemie à 3000 pixels
+                    Canvas.SetLeft(ennemie2, ENNEMIE_REAPPARITION);
+                    // cela choisi aléatoirement une position dans le tableau afin qu'elle ne soit pas la même à chaque fois qu'elle apparaîtra sur l'écran
+                    Canvas.SetTop(ennemie2, ennemie2Position[aleatoire.Next(0, ennemie2Position.Length)]);
+                    compteurtemps = RESET;
                 }
             }
 
-            if (Canvas.GetLeft(enemie2) < -50)
+            if (Canvas.GetLeft(ennemie3) < ENNEMIE_DISPARITION)
             {
-                if (compteurtemps % (60 * rand.Next(1, 6)) == 0)
+                if (compteurtemps % (TEMPS_SECONDE * aleatoire.Next(tempsMin, tempsMax)) == RESET)
                 {
-                    /*itemsToRemove.Add(enemie1);*/
-                    // régler la position gauche de l'obstacle à 950 pixels
-                    Canvas.SetLeft(enemie2, 1000);
-                    // définit aléatoirement la position supérieure de l'obstacle à partir du tableau que nous avons créé précédemment
-                    // cela choisira aléatoirement une position dans le tableau afin qu'elle ne soit pas la même à chaque fois qu'elle apparaîtra sur l'écran
-                    Canvas.SetTop(enemie2, enemie2Position[rand.Next(0, enemie2Position.Length)]);
-                    // ajouter 1 au score
-                    /*score += 1;*/
-                    compteurtemps = 0;
+                    Console.WriteLine("Temps à attendre voiture 3: " + aleatoire);
+                    numeroVoitureEnnemie3 = aleatoire.Next(SKIN_MIN, SKIN_MAX);
+                    Console.WriteLine("N° skin voiture 3: " + numeroVoitureEnnemie3);
+                    ennemie3Skin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "image/Voitures_Enemies/enemie" + numeroVoitureEnnemie3 + ".png"));
+                    ennemie3.Fill = ennemie3Skin;
+
+                    // Faire réapparaitre l'énemie à 3000 pixels
+                    Canvas.SetLeft(ennemie3, ENNEMIE_REAPPARITION);
+                    // cela choisi aléatoirement une position dans le tableau afin qu'elle ne soit pas la même à chaque fois qu'elle apparaîtra sur l'écran
+                    Canvas.SetTop(ennemie3, ennemie3Position[aleatoire.Next(0, ennemie3Position.Length)]);
+                    compteurtemps = RESET;
                 }
             }
 
-            if (Canvas.GetLeft(enemie3) < -50)
+            if (Canvas.GetLeft(ennemie4) < ENNEMIE_DISPARITION)
             {
-                if (compteurtemps % (60 * rand.Next(1, 6)) == 0)
+                if (compteurtemps % (TEMPS_SECONDE * aleatoire.Next(tempsMin, tempsMax)) == RESET)
                 {
-                    /*itemsToRemove.Add(enemie1);*/
-                    // régler la position gauche de l'obstacle à 950 pixels
-                    Canvas.SetLeft(enemie3, 1000);
-                    // définit aléatoirement la position supérieure de l'obstacle à partir du tableau que nous avons créé précédemment
-                    // cela choisira aléatoirement une position dans le tableau afin qu'elle ne soit pas la même à chaque fois qu'elle apparaîtra sur l'écran
-                    Canvas.SetTop(enemie3, enemie3Position[rand.Next(0, enemie3Position.Length)]);
-                    // ajouter 1 au score
-                    /*score += 1;*/
-                    compteurtemps = 0;
-                }
-            }
+                    Console.WriteLine("Temps à attendre voiture 4: " + aleatoire);
+                    numeroVoitureEnnemie4 = aleatoire.Next(SKIN_MIN, SKIN_MAX);
+                    Console.WriteLine("N° skin voiture 4: " + numeroVoitureEnnemie4);
+                    ennemie4Skin.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "image/Voitures_Enemies/enemie" + numeroVoitureEnnemie4 + ".png"));
+                    ennemie4.Fill = ennemie4Skin;
 
-            /*private void NouveauEnemie(int limit)
-            {
-            if (Canvas.GetLeft(enemie4) < -50)
-            {
-                if (compteurtemps % (60 * rand.Next(1, 6)) == 0)
-                {
-                    /*itemsToRemove.Add(enemie1);*/
-                    // régler la position gauche de l'obstacle à 950 pixels
-                    Canvas.SetLeft(enemie4, 1000);
-                    // définit aléatoirement la position supérieure de l'obstacle à partir du tableau que nous avons créé précédemment
-                    // cela choisira aléatoirement une position dans le tableau afin qu'elle ne soit pas la même à chaque fois qu'elle apparaîtra sur l'écran
-                    Canvas.SetTop(enemie4, enemie4Position[rand.Next(0, enemie4Position.Length)]);
-                    // ajouter 1 au score
-                    /*score += 1;*/
-                    compteurtemps = 0;
+                    // Faire réapparaitre l'énemie à 3000 pixels
+                    Canvas.SetLeft(ennemie4, ENNEMIE_REAPPARITION);
+                    // cela choisi aléatoirement une position dans le tableau afin qu'elle ne soit pas la même à chaque fois qu'elle apparaîtra sur l'écran
+                    Canvas.SetTop(ennemie4, ennemie4Position[aleatoire.Next(0, ennemie4Position.Length)]);
+                    compteurtemps = RESET;
                 }
             }
         }
 
-            }
-            */
-            private void Collision()
-            {
-                /*joueurHitBox = new Rect(Canvas.GetLeft(joueur), Canvas.GetTop(joueur), joueur.Width, joueur.Height);*/
 
-                if (Canvas.GetTop(joueur) < 93)
-                {
-                    Canvas.SetTop(joueur, Canvas.GetTop(joueur) + 10);
-                }
-                if (Canvas.GetTop(joueur) > 357)
-                {
-                    Canvas.SetTop(joueur, Canvas.GetTop(joueur) - 10);
-                }
 
         private void Collision()
         {
-            /*joueurHitBox = new Rect(Canvas.GetLeft(joueur), Canvas.GetTop(joueur), joueur.Width, joueur.Height);*/
-             
-            if (Canvas.GetTop(joueur) < 93)
+            if (Canvas.GetTop(joueur) < COLLISION_BORDURE_HAUT)
             {
-                Canvas.SetTop(joueur, Canvas.GetTop(joueur) + 10);
+                Canvas.SetTop(joueur, Canvas.GetTop(joueur) + COLLISION_JOUEUR);
             }
-            if (Canvas.GetTop(joueur) > 357)
+            if (Canvas.GetTop(joueur) > COLLISION_BORDURE_BAS)
             {
-                Canvas.SetTop(joueur, Canvas.GetTop(joueur) - 10);
+                Canvas.SetTop(joueur, Canvas.GetTop(joueur) - COLLISION_JOUEUR);
             }
-
-            }
-
-
-
-            private void ArrierePlanEnMouvement()
+            if (Canvas.GetLeft(joueur) > COLLISION_BORDURE_GAUCHE)
             {
-                // déplacez l'arrière-plan de 10 pixels vers la gauche à chaque tick (1 tick = 17ms)
-                Canvas.SetLeft(ArrierePlan, Canvas.GetLeft(ArrierePlan) - 5);
-                Canvas.SetLeft(ArrierePlan2, Canvas.GetLeft(ArrierePlan2) - 5);
-
-                // code de défilement de parallaxe pour c#
-                // le code ci-dessous fera défiler l'arrière-plan simultanément et le fera paraître sans fin
-                // vérifie le premier arrière-plan
-                // si la première position X de l'arrière-plan descend en dessous de -1435 pixels
-                if (Canvas.GetLeft(ArrierePlan) < -1435)
-                {
-                    // positionne le premier arrière-plan derrière le deuxième arrière-plan
-                    // ci-dessous, nous définissons les arrière-plans à gauche, à la position de largeur background2
-                    Canvas.SetLeft(ArrierePlan, Canvas.GetLeft(ArrierePlan2) + ArrierePlan2.Width);
-                }
-                // on fait pareil pour le fond 2
-                // si la position X de l'arrière-plan 2 descend en dessous de -1435
-                if (Canvas.GetLeft(ArrierePlan2) < -1435)
-                {
-                    // positionne le deuxième arrière-plan derrière le premier arrière-plan
-                    // ci-dessous, nous définissons la position gauche de l'arrière-plan 2 ou la position X sur la position de la largeur de l'arrière-plan
-                    Canvas.SetLeft(ArrierePlan2, Canvas.GetLeft(ArrierePlan) + ArrierePlan.Width);
-                }
+                Canvas.SetLeft(joueur, Canvas.GetLeft(joueur) - COLLISION_JOUEUR);
             }
-
-            private void Bouger_Joueur()
+            if (Canvas.GetLeft(joueur) < COLLISION_BORDURE_DROITE)
             {
-                if (goUp && Canvas.GetTop(joueur) > 0)
-                {
-                    Canvas.SetTop(joueur, Canvas.GetTop(joueur) - vitesseJoueur);
-                }
-                if (goDown && Canvas.GetTop(joueur) > 0)
-                {
-                    Canvas.SetTop(joueur, Canvas.GetTop(joueur) + vitesseJoueur);
-                }
+                Canvas.SetLeft(joueur, Canvas.GetLeft(joueur) + COLLISION_JOUEUR);
             }
+        }
+
+
+        private void ArrierePlanEnMouvement()
+        {
+            // déplacez l'arrière-plan de 10 pixels vers la gauche à chaque tick (1 tick = 17ms)
+            Canvas.SetLeft(ArrierePlan, Canvas.GetLeft(ArrierePlan) - VITESSE_ARRIERE_PLAN);
+            Canvas.SetLeft(ArrierePlan2, Canvas.GetLeft(ArrierePlan2) - VITESSE_ARRIERE_PLAN);
+
+            // code de défilement de parallaxe pour c#
+            // le code ci-dessous fera défiler l'arrière-plan simultanément et le fera paraître sans fin
+            // vérifie le premier arrière-plan
+            // si la première position X de l'arrière-plan descend en dessous de -1435 pixels
+            if (Canvas.GetLeft(ArrierePlan) < ARRIERE_PLAN_REAPPARITION)
+            {
+                // positionne le premier arrière-plan derrière le deuxième arrière-plan
+                // ci-dessous, nous définissons les arrière-plans à gauche, à la position de largeur background2
+                Canvas.SetLeft(ArrierePlan, Canvas.GetLeft(ArrierePlan2) + ArrierePlan2.Width);
+                Console.WriteLine("Arriere plan 1 déplacé en : " + (Canvas.GetLeft(ArrierePlan2) + ArrierePlan2.Width));
+            }
+            // on fait pareil pour le fond 2
+            // si la position X de l'arrière-plan 2 descend en dessous de -1435
+            if (Canvas.GetLeft(ArrierePlan2) < ARRIERE_PLAN_REAPPARITION)
+            {
+                // positionne le deuxième arrière-plan derrière le premier arrière-plan
+                // ci-dessous, nous définissons la position gauche de l'arrière-plan 2 ou la position X sur la position de la largeur de l'arrière-plan
+                Canvas.SetLeft(ArrierePlan2, Canvas.GetLeft(ArrierePlan) + ArrierePlan.Width);
+                Console.WriteLine("Arriere plan 2 déplacé en : " + (Canvas.GetLeft(ArrierePlan) + ArrierePlan.Width));
+            }
+        }
+
+
         private void Bouger_Joueur()
         {
-            if (goUp && Canvas.GetTop(joueur) > 0)
+            if (goUp && Canvas.GetTop(joueur) > RESET)
             {
                 Canvas.SetTop(joueur, Canvas.GetTop(joueur) - vitesseJoueur);
+                Console.WriteLine("Bouton pour monter pressé on monte le joueur");
             }
-            if (goDown && Canvas.GetTop(joueur) > 0)
+            if (goDown && Canvas.GetTop(joueur) > RESET)
             {
                 Canvas.SetTop(joueur, Canvas.GetTop(joueur) + vitesseJoueur);
+                Console.WriteLine("Bouton pour descendre pressé on descend le joueur");
             }
-            if (goLeft && Canvas.GetLeft(joueur) > 0)
+            if (goLeft && Canvas.GetLeft(joueur) > RESET)
             {
                 Canvas.SetLeft(joueur, Canvas.GetLeft(joueur) - vitesseJoueur);
+                Console.WriteLine("Bouton pour se décaler à gauche pressé on décale à gauche le joueur");
             }
-            if (goRight && Canvas.GetRight(joueur) > 0)
+            if (goRight && Canvas.GetLeft(joueur) > RESET)
             {
-                Canvas.SetRight(joueur, Canvas.GetRight(joueur) + vitesseJoueur);
+                Canvas.SetLeft(joueur, Canvas.GetLeft(joueur) + vitesseJoueur);
+                Console.WriteLine("Bouton pour se décaler à droite pressé on décale à droite le joueur");
             }
         }
 
-            /*---------------------------------------------------------------------↑↑↑↑↑↑-METHODES-↑↑↑↑↑↑--------------------------------------------------------------------*/
-            /*---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+        /*------------------------------------------------------------------↓↓↓↓↓↓-FENETRE PERDU-↓↓↓↓↓↓------------------------------------------------------------------*/
+
+        private void butRejouerPerdu_Click(object sender, RoutedEventArgs e)
+        {
+            tempsVoiture = RESET;
+
+            foreach (Rectangle x in myCanvas.Children.OfType<Rectangle>())
+            {
+                if ((string)x.Tag == "enemie")
+                {
+                    Canvas.SetLeft(ennemie1, RESET_POSITION_GAUCHE_ENNEMIE1);
+                    Canvas.SetTop(ennemie1, RESET_POSITION_HAUT_ENNEMIE1);
+
+                    Canvas.SetLeft(ennemie2, RESET_POSITION_GAUCHE_ENNEMIE2);
+                    Canvas.SetTop(ennemie2, RESET_POSITION_HAUT_ENNEMIE2);
+
+                    Canvas.SetLeft(ennemie3, RESET_POSITION_GAUCHE_ENNEMIE2);
+                    Canvas.SetTop(ennemie3, RESET_POSITION_HAUT_ENNEMIE3);
+
+                    Canvas.SetLeft(ennemie4, RESET_POSITION_GAUCHE_ENNEMIE1);
+                    Canvas.SetTop(ennemie4, RESET_POSITION_HAUT_ENNEMIE4);
+                }
+
+                if ((string)x.Tag == "joueur")
+                {
+                    Canvas.SetLeft(joueur, RESET_POSITION_GAUCHE_JOUEUR);
+                    Canvas.SetTop(joueur, RESET_POSITION_HAUT_JOUEUR);
+                }
+            }
+            jeuTimer.Start();
+            fenetrePerdu.Visibility = Visibility.Hidden;
+            gameover = false;
+        }
+
+        private void butMenuPerdu_Click(object sender, RoutedEventArgs e)
+        {
+            Menu fenetreDebut = new Menu();
+            fenetreDebut.ShowDialog();
+        }
+
+        private void butQuitterPerdu_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        /*------------------------------------------------------------------↑↑↑↑↑↑-FENETRE PERDU-↑↑↑↑↑↑------------------------------------------------------------------*/
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+        /*------------------------------------------------------------------↓↓↓↓↓↓-FENETRE PAUSE-↓↓↓↓↓↓------------------------------------------------------------------*/
+        private void butRejouerPause_Click(object sender, RoutedEventArgs e)
+        {
+            tempsVoiture = RESET;
+
+            foreach (Rectangle x in myCanvas.Children.OfType<Rectangle>())
+            {
+                if ((string)x.Tag == "enemie")
+                {
+                    Canvas.SetLeft(ennemie1, RESET_POSITION_GAUCHE_ENNEMIE1);
+                    Canvas.SetTop(ennemie1, RESET_POSITION_HAUT_ENNEMIE1);
+
+                    Canvas.SetLeft(ennemie2, RESET_POSITION_GAUCHE_ENNEMIE2);
+                    Canvas.SetTop(ennemie2, RESET_POSITION_HAUT_ENNEMIE2);
+
+                    Canvas.SetLeft(ennemie3, RESET_POSITION_GAUCHE_ENNEMIE2);
+                    Canvas.SetTop(ennemie3, RESET_POSITION_HAUT_ENNEMIE3);
+
+                    Canvas.SetLeft(ennemie4, RESET_POSITION_GAUCHE_ENNEMIE1);
+                    Canvas.SetTop(ennemie4, RESET_POSITION_HAUT_ENNEMIE4);
+                }
+
+                /*else*/
+                if ((string)x.Tag == "joueur")
+                {
+                    Canvas.SetLeft(joueur, RESET_POSITION_GAUCHE_JOUEUR);
+                    Canvas.SetTop(joueur, RESET_POSITION_HAUT_JOUEUR);
+                }
+            }
+            jeuTimer.Start();
+            fenetrePause.Visibility = Visibility.Hidden;
+            butQuitterPause.Visibility = Visibility.Hidden;
+        }
+
+        private void butReprendrePause_Click(object sender, RoutedEventArgs e)
+        {
+            jeuTimer.Start();
+            fenetrePause.Visibility = Visibility.Hidden;
+            butQuitterPause.Visibility = Visibility.Hidden;
+        }
+
+        private void butMenuPause_Click(object sender, RoutedEventArgs e)
+        {
+            Menu fenetreDebut = new Menu();
+            fenetreDebut.ShowDialog();
+        }
+
+        private void butQuitterPause_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
 
 
+        /*------------------------------------------------------------------↑↑↑↑↑↑-FENETRE PAUSE-↑↑↑↑↑↑------------------------------------------------------------------*/
+        /*---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------↑↑↑↑↑↑-METHODES-↑↑↑↑↑↑---------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+    }
+}
 
 
-    } 
-   
+
+
+
+
+
 
 
 

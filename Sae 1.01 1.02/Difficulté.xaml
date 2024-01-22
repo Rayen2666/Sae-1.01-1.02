@@ -1,22 +1,76 @@
-﻿<Window x:Class="Sae_1._01_1._02.Difficulté"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Sae_1._01_1._02"
-        mc:Ignorable="d"
-        WindowStartupLocation="CenterScreen"
-        Title="Difficulté" Height="450" Width="800">
+﻿<Window
+    x:Class="Sae_1._01_1._02.Difficulte"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Sae_1._01_1._02"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Difficulté"
+    Width="800"
+    Height="450"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
     <Grid>
-        <ComboBox 
-            Name="choix_difficulte"  VerticalAlignment="Center"                      
-            HorizontalAlignment="Center"  Width="120">
-            <ComboBoxItem IsSelected="True" Name="Facile">Facile</ComboBoxItem>
-            <ComboBoxItem Name="Moyen">Moyen</ComboBoxItem>
-            <ComboBoxItem  Name="Difficile">Difficile</ComboBoxItem>
+        <Rectangle x:Name="fond_Difficulte" />
+        <Label
+            Width="300"
+            Margin="0,159,0,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            HorizontalContentAlignment="Center"
+            Content="Choix du niveaux"
+            FontFamily="Showcard Gothic"
+            FontSize="25" />
+        <Button
+            x:Name="butFacile"
+            Width="100"
+            Height="30"
+            Margin="-217,217,0,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Background="{x:Null}"
+            BorderBrush="Black"
+            Click="butFacile_Click"
+            Content="FACILE"
+            FontFamily="Showcard Gothic"
+            FontSize="18" />
+        <Button
+            x:Name="butMoyen"
+            Width="100"
+            Height="30"
+            Margin="0,217,0,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Background="{x:Null}"
+            BorderBrush="Black"
+            Click="butMoyen_Click"
+            Content="MOYEN"
+            FontFamily="Showcard Gothic"
+            FontSize="18" />
+        <Button
+            x:Name="butDifficile"
+            Width="100"
+            Height="30"
+            Margin="217,217,0,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Background="{x:Null}"
+            BorderBrush="Black"
+            Click="butDifficile_Click"
+            Content="DIFFICILE"
+            FontFamily="Showcard Gothic"
+            FontSize="18" />
 
-        </ComboBox>
-        <Label Content="Veuillez choisir un niveau de difficulté :" HorizontalAlignment="Center" Margin="0,161,0,0" VerticalAlignment="Top" Width="220"/>
-        <Button Content="Sélectionner" HorizontalAlignment="Left" Height="39" Margin="302,268,0,0" VerticalAlignment="Top" Width="181" Click="Selection"/>
+        <Button
+            x:Name="retourimage"
+            Width="85"
+            Height="35"
+            Margin="47,41,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Background="Transparent"
+            BorderBrush="{x:Null}"
+            Click="retour_Click" />
+
     </Grid>
 </Window>

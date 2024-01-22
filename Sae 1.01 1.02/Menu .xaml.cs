@@ -23,27 +23,39 @@ namespace Sae_1._01_1._02
         ImageBrush image = new ImageBrush();
         ImageBrush image3 = new ImageBrush();
 
+        public Key toucheHaut, toucheBas, toucheGauche, toucheDroite;
+
 
         public Menu()
         {
             InitializeComponent();
-            image.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "ImageMenu.jpg"));
+            image.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "image/ImageMenu.jpg"));
             image2.Fill = image;
-            image3.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "F1finite.png"));
+            image3.ImageSource = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + "image/F1finite.png"));
             F1finite.Fill = image3;
+
+
+
 
         }
 
         private void Jouer_Button_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;
+
         }
 
 
-            private void Parametre_Button_Click(object sender, RoutedEventArgs e)
+        private void Parametre_Button_Click(object sender, RoutedEventArgs e)
         {
             Parametres fenetreParametres = new Parametres();
             fenetreParametres.ShowDialog();
+
+            toucheHaut = fenetreParametres.toucheHaut;
+            toucheBas= fenetreParametres.toucheBas;
+            toucheDroite = fenetreParametres.toucheDroite;
+            toucheGauche = fenetreParametres.toucheGauche;
+
         }
 
       
@@ -51,7 +63,6 @@ namespace Sae_1._01_1._02
         private void Annuler_Button_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;
-           
         }
 
        
